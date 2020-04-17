@@ -1,4 +1,5 @@
 const xlsxToJson = require("xlsx-to-json-lc");
+const fs = require("fs");
 
 module.exports = {
     create(req, res, next) {
@@ -25,10 +26,17 @@ module.exports = {
                             data: null,
                         });
                     }
-                    res.json({
-                        data: result,
-                        file: file,
-                    });
+                    try {
+                        fs.unlinkSync(req.file.path);
+                        res.json({
+                            data: result,
+                            file: file,
+                        });
+                    } catch (e) {
+                        res.json({
+                            err: e,
+                        });
+                    }
                 }
             );
         } catch (e) {
