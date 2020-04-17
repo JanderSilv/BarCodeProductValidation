@@ -1,12 +1,12 @@
 const multer = require("multer");
 
-let storage = multer.diskStorage({
+const storage = multer.diskStorage({
     //multers disk storage settings
     destination: function (req, file, cb) {
         cb(null, "./src/uploads");
     },
     filename: function (req, file, cb) {
-        var datetimestamp = Date.now();
+        const datetimestamp = Date.now();
         cb(
             null,
             file.fieldname +
@@ -20,7 +20,7 @@ let storage = multer.diskStorage({
     },
 });
 
-let upload = multer({
+const upload = multer({
     storage: storage,
     fileFilter: function (req, file, callback) {
         if (
