@@ -46,4 +46,35 @@ export const style = StyleSheet.create({
         top: 0,
     },
     //#endregion
+
+    //#endregion BackButtonStyles
+    backButtonContainer: {
+        flex: 1,
+        marginTop: 10,
+        marginLeft: 10,
+    },
+
+    backButton: {
+        width: 90,
+        height: 30,
+        backgroundColor: "white",
+        borderRadius: 50,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    //#endregion
+
+    bottomContainer: {
+        paddingTop: 20,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
+
+    finishedShipment: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
 });

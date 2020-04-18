@@ -32,4 +32,16 @@ module.exports = {
             }
         );
     },
+
+    remove(req, res) {
+        const { deliveryNo } = req.query;
+        const path = "./src/Json/1587159517493.json";
+        const data = fs.readFileSync(path);
+        let json = JSON.parse(data);
+        json = json.filter((delivery) => {
+            return delivery["delivery no."] !== deliveryNo;
+        });
+        fs.writeFileSync(path, JSON.stringify(json, null, 2));
+        res.json(json);
+    },
 };

@@ -14,5 +14,6 @@ routes.post(
 routes.get("/indexExcel", ExcelUploadController.index);
 
 routes.get("/shipments", ShipmentController.index);
+routes.delete("/deleteShipment", ShipmentController.remove);
 
 module.exports = routes;
