@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity, Modal, StatusBar } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import BarcodeMask from "react-native-barcode-mask";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useExitAppOnDoublePress } from "@shankarmorwal/react-native-exit-on-double-press";
 
 import { style } from "./styles";
-import BrinksLogo from "../../assets/logo/brinks_logo.png";
+// import BrinksLogo from "../../assets/logo/brinks_logo.png";
 
 export default function Scanner() {
     const [hasPermission, setHasPermission] = useState(null);
@@ -15,11 +16,16 @@ export default function Scanner() {
     const [quantity, setQuantity] = useState(0);
     const [isValid, setIsValid] = useState(null);
 
-    const navigation = useNavigation();
-    const route = useRoute();
+    useExitAppOnDoublePress({
+        condition: true,
+        message: "Aperte novamente para sair",
+        timeout: 2000,
+    });
 
-    const shipment = route.params.shipment;
-    // navigation.reset({ index: 1, routes: [{ name: "Scanner" }] });
+    const navigation = useNavigation();
+    const routes = useRoute();
+
+    const shipment = routes.params.shipment;
 
     useEffect(() => {
         (async () => {
@@ -47,8 +53,9 @@ export default function Scanner() {
     }
     return (
         <View style={{ flex: 1 }}>
+            <StatusBar backgroundColor="black" barStyle="light-content" />
             <Camera
-                style={{ flex: 0.8 }}
+                style={{ flex: 0.9 }}
                 type={Camera.Constants.Type.back}
                 ratio="16:9"
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -58,12 +65,35 @@ export default function Scanner() {
                         edgeColor={"#2E74FF"}
                         showAnimatedLine={true}
                     />
-                    <View style={{ flex: 1, alignItems: "center" }}>
+                    <View style={{ flex: 1, marginTop: 10, marginLeft: 10 }}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("Shipments")}
+                            style={{
+                                width: 90,
+                                height: 30,
+                                backgroundColor: "white",
+                                borderRadius: 50,
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name="door-open"
+                                size={20}
+                                color="gray"
+                            />
+                            <Text style={{ color: "gray", marginLeft: 5 }}>
+                                Voltar
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    {/* <View style={{ flex: 1, alignItems: "center" }}>
                         <Image
                             source={BrinksLogo}
                             style={scanned ? style.logoScanned : style.logo}
                         />
-                    </View>
+                    </View> */}
                     {scanned && (
                         <View style={style.buttonContainer}>
                             <TouchableOpacity

@@ -11,5 +11,6 @@ export const style = StyleSheet.create({
         paddingHorizontal: 20,
         marginBottom: 20,
         marginRight: 20,
+        backgroundColor: "#ebebeb",
     },
 });

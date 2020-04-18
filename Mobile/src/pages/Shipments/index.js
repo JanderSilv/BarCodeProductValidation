@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, Text, TouchableOpacity } from "react-native";
+import {
+    View,
+    FlatList,
+    Text,
+    TouchableOpacity,
+    StatusBar,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import api from "../../services/api";
 
@@ -23,11 +29,26 @@ export default function Shipments() {
     }, []);
 
     function navigateToScanner(shipment) {
-        navigation.navigate("Scanner", { shipment });
+        navigation.reset({
+            index: 0,
+            routes: [{ name: "Scanner", params: { shipment: shipment } }],
+        });
     }
 
     return (
-        <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 10 }}>
+        <View
+            style={{
+                flex: 1,
+                paddingTop: 20,
+                paddingHorizontal: 16,
+            }}
+        >
+            <StatusBar backgroundColor="white" barStyle="dark-content" />
+            <Text
+                style={{ textAlign: "center", marginBottom: 20, fontSize: 20 }}
+            >
+                Escolha um pedido
+            </Text>
             <FlatList
                 data={shipments}
                 keyExtractor={(shipment) => String(shipment["delivery no."])}
