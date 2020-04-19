@@ -1,45 +1,21 @@
 const fs = require("fs");
-
-function readFiles(dirname, onFileContent, onError) {
-    fs.readdir(dirname, function (err, filenames) {
-        if (err) {
-            onError(err);
-            return;
-        }
-        filenames.forEach(function (filename) {
-            fs.readFile(dirname + filename, "utf-8", function (err, content) {
-                if (err) {
-                    onError(err);
-                    return;
-                }
-                onFileContent(filename, content);
-            });
-        });
-    });
-}
+const path = "./src/Json/Data.json";
 
 module.exports = {
     index(req, res) {
-        let data = {};
-        readFiles(
-            "src/Json/",
-            function (filename, content) {
-                data[filename] = JSON.parse(content);
-                res.json(data[filename]);
-            },
-            function (err) {
-                throw err;
-            }
-        );
+        const json = fs.readFileSync(path);
+        const data = JSON.parse(json);
+        res.json(data);
     },
 
     remove(req, res) {
         const { deliveryNo } = req.query;
-        const path = "./src/Json/1587159517493.json";
         const data = fs.readFileSync(path);
         let json = JSON.parse(data);
-        json = json.filter((delivery) => {
-            return delivery["delivery no."] !== deliveryNo;
+        json = json.map((shipments) => {
+            return shipments.filter((delivery) => {
+                return delivery["delivery no."] !== deliveryNo;
+            });
         });
         fs.writeFileSync(path, JSON.stringify(json, null, 2));
         res.json(json);

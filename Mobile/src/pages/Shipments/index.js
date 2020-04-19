@@ -13,7 +13,6 @@ import { style } from "./styles";
 
 export default function Shipments() {
     const [shipments, setShipments] = useState([]);
-    const numColumns = 2;
 
     const navigation = useNavigation();
 
@@ -24,7 +23,7 @@ export default function Shipments() {
                 setShipments(res.data);
             })
             .catch((error) => {
-                console.log("Shipments => ", error);
+                console.log("Shipments =>", error);
             });
     }, []);
 
@@ -35,12 +34,47 @@ export default function Shipments() {
         });
     }
 
+    const shipmentList = ({ item: shipmentsArray }) => {
+        return shipmentsArray.map((shipment) => {
+            return (
+                <View
+                    key={shipment["delivery no."]}
+                    style={{
+                        alignItems: "center",
+                        paddingLeft: 20,
+                        paddingRight: 5,
+                    }}
+                >
+                    <TouchableOpacity
+                        style={style.shipment}
+                        onPress={() => navigateToScanner(shipment)}
+                    >
+                        <View style={style.shipmentTexts}>
+                            <Text>Nº Pedido:</Text>
+                            <Text>{shipment["delivery no."]}</Text>
+                        </View>
+                        <View style={style.shipmentTexts}>
+                            <Text>Nº do Manifesto:</Text>
+                            <Text>{shipment["manifest no."]}</Text>
+                        </View>
+                        <View style={[style.shipmentTexts, { maxWidth: 150 }]}>
+                            <Text>Destino:</Text>
+                            <Text>
+                                {shipment.city}-{shipment.udf}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            );
+        });
+    };
+
     return (
         <View
             style={{
                 flex: 1,
                 paddingTop: 20,
-                paddingHorizontal: 16,
+                // paddingHorizontal: 16,
             }}
         >
             <StatusBar backgroundColor="white" barStyle="dark-content" />
@@ -49,29 +83,14 @@ export default function Shipments() {
             >
                 Escolha um pedido
             </Text>
-            <FlatList
-                data={shipments}
-                keyExtractor={(shipment) => String(shipment["delivery no."])}
-                showsVerticalScrollIndicator={false}
-                numColumns={numColumns}
-                renderItem={({ item: shipment }) => (
-                    <View style={{ alignItems: "center" }}>
-                        <TouchableOpacity
-                            style={style.shipment}
-                            onPress={() => navigateToScanner(shipment)}
-                        >
-                            <Text>Nº Pedido:</Text>
-                            <Text>{shipment["delivery no."]}</Text>
-                            <Text>Nº do Manifesto:</Text>
-                            <Text>{shipment["manifest no."]}</Text>
-                            <Text>Destino:</Text>
-                            <Text>
-                                {shipment.city}-{shipment.udf}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-            />
+            <View style={{ flex: 1 }}>
+                <FlatList
+                    data={shipments}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={shipmentList}
+                />
+            </View>
         </View>
     );
 }

@@ -1,6 +1,35 @@
 const xlsxToJson = require("xlsx-to-json-lc");
 const fs = require("fs");
 
+function DeleteSumManifest(json) {
+    // const path = "./src/Json/Data.json";
+    // const data = fs.readFileSync(path);
+    // let json = JSON.parse(data);
+    json = json.filter((delivery) => {
+        return delivery["manifest no."] !== "Manifest Sum";
+    });
+    return json;
+    // fs.writeFileSync(path, JSON.stringify(json, null, 2));
+}
+
+function StoreDataInDataJson(json) {
+    const path = "./src/Json/Data.json";
+    fs.readFile(path, "utf-8", function (err, data) {
+        if (err) throw err;
+        const arrayOfObjects = JSON.parse(data);
+        arrayOfObjects.push(json);
+        fs.writeFile(
+            path,
+            JSON.stringify(arrayOfObjects, null, 2),
+            "utf-8",
+            function (err) {
+                if (err) throw err;
+                console.log("Done!");
+            }
+        );
+    });
+}
+
 module.exports = {
     create(req, res, next) {
         const file = req.file;
@@ -10,12 +39,12 @@ module.exports = {
             error.httpStatusCode = 400;
             return next(error);
         }
-        console.log(req.file.path);
+        // console.log(req.file.path);
         try {
             excelToJson(
                 {
                     input: req.file.path,
-                    output: `./src/Json/${Date.now()}.json`,
+                    output: null, //`./src/Json/${Date.now()}.json`,
                     lowerCaseHeaders: true,
                 },
                 function (err, result) {
@@ -28,6 +57,8 @@ module.exports = {
                     }
                     try {
                         fs.unlinkSync(req.file.path);
+                        result = DeleteSumManifest(result);
+                        StoreDataInDataJson(result);
                         res.json({
                             data: result,
                             file: file,

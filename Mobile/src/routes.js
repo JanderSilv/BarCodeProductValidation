@@ -12,7 +12,11 @@ export default function src() {
     return (
         <NavigationContainer>
             <AppStack.Navigator>
-                <AppStack.Screen name="Shipments" component={Shipments} />
+                <AppStack.Screen
+                    name="Shipments"
+                    options={{ headerTitle: "Pedidos" }}
+                    component={Shipments}
+                />
                 <AppStack.Screen
                     name="Scanner"
                     component={Scanner}
