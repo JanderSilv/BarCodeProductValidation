@@ -77,7 +77,7 @@ export default function Shipments() {
                 // paddingHorizontal: 16,
             }}
         >
-            <StatusBar backgroundColor="white" barStyle="dark-content" />
+            <StatusBar backgroundColor="#163e7a" barStyle="light-content" />
             <Text
                 style={{ textAlign: "center", marginBottom: 20, fontSize: 20 }}
             >
